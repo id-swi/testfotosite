@@ -4,29 +4,258 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Photo Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap"
+      rel="stylesheet"
+    />
     <style>
       * {
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
       }
+
       html,
       body {
         width: 100%;
+        min-height: 100%;
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background: #fff;
+        color: #202124;
+        overflow-x: hidden;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      body.no-scroll {
         height: 100%;
         overflow: hidden;
       }
-      iframe {
-        width: 100vw;
-        height: 100vh;
+
+      /* ── Top Navigation Bar ── */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        height: 64px;
+        min-height: 64px;
+        border-bottom: 1px solid #e0e0e0;
+        background: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .site-name {
+        font-weight: 800;
+        font-size: 1.25rem;
+        letter-spacing: -0.02em;
+        color: #202124;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      nav {
+        display: flex;
+        gap: 4px;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: #5f6368;
+        font-size: 0.875rem;
+        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 24px;
+        transition:
+          background 0.2s,
+          color 0.2s;
+        cursor: pointer;
+      }
+
+      nav a:hover {
+        background: #f1f3f4;
+        color: #202124;
+      }
+
+      nav a.active {
+        background: #202124;
+        color: #fff;
+      }
+
+      /* ── Page Sections ── */
+      .page {
+        display: none;
+      }
+
+      .page.active {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── Home ── */
+      .page-home {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 48px 24px;
+        flex: 1;
+      }
+
+      .page-home h1 {
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        color: #202124;
+      }
+
+      .page-home p {
+        margin-top: 20px;
+        font-size: 1.1rem;
+        color: #5f6368;
+        max-width: 480px;
+        line-height: 1.6;
+      }
+
+      /* ── Portfolio ── */
+      .page-portfolio {
+        padding: 0;
+        display: block !important;
+      }
+
+      .page-portfolio:not(.active) {
+        display: none !important;
+      }
+
+      .iframe-wrapper {
+        display: flex;
+        justify-content: center;
+      }
+
+      .iframe-wrapper iframe {
+        width: 100%;
+        max-width: 1200px;
+        height: 5000px;
         border: none;
         display: block;
+        background: #fff;
+        scrollbar-width: none;
+      }
+
+      .iframe-wrapper iframe::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ── Kontakt ── */
+      .page-kontakt {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 48px 24px;
+        flex: 1;
+      }
+
+      .page-kontakt h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        color: #202124;
+      }
+
+      .page-kontakt p {
+        margin-top: 16px;
+        font-size: 1.05rem;
+        color: #5f6368;
+        line-height: 1.6;
+        max-width: 480px;
+      }
+
+      /* ── Mobile ── */
+      @media (max-width: 600px) {
+        header {
+          padding: 0 16px;
+          height: 56px;
+          min-height: 56px;
+        }
+
+        nav a {
+          padding: 6px 12px;
+          font-size: 0.8rem;
+        }
+
+        .iframe-wrapper {
+          padding: 0;
+        }
       }
     </style>
   </head>
-  <body>
-    <iframe
-      src="https://script.google.com/macros/s/AKfycbz-IdccZeyDig4EjEYbYNfXq77l5VARyDv1RFcZ18QdE3J9uoC6kPgLXOUs6-963zHd/exec"
-      allow="fullscreen"
-    ></iframe>
+  <body class="no-scroll">
+    <header>
+      <span class="site-name" onclick="showPage('home')">Photo Gallery</span>
+      <nav>
+        <a onclick="showPage('home')" class="active" data-page="home">Home</a>
+        <a onclick="showPage('portfolio')" data-page="portfolio">Portfolio</a>
+        <a onclick="showPage('kontakt')" data-page="kontakt">Kontakt</a>
+      </nav>
+    </header>
+
+    <section class="page page-home active" id="page-home">
+      <h1>Herzlich Willkommen</h1>
+      <p>Entdecken Sie meine Arbeiten und lassen Sie sich inspirieren.</p>
+    </section>
+
+    <section class="page page-portfolio" id="page-portfolio">
+      <div class="iframe-wrapper">
+        <iframe
+          src="https://script.google.com/macros/s/AKfycbz-IdccZeyDig4EjEYbYNfXq77l5VARyDv1RFcZ18QdE3J9uoC6kPgLXOUs6-963zHd/exec"
+          allow="fullscreen"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </section>
+
+    <section class="page page-kontakt" id="page-kontakt">
+      <h1>Kontakt</h1>
+      <p>
+        Haben Sie Fragen oder möchten Sie ein Projekt besprechen? Nehmen Sie
+        gerne Kontakt auf.
+      </p>
+    </section>
+
+    <script>
+      function showPage(name) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll("nav a")
+          .forEach((a) => a.classList.remove("active"));
+        document.getElementById("page-" + name).classList.add("active");
+        document
+          .querySelector('nav a[data-page="' + name + '"]')
+          .classList.add("active");
+
+        // Portfolio scrolls the page; other pages are contained
+        if (name === "portfolio") {
+          document.body.classList.remove("no-scroll");
+        } else {
+          document.body.classList.add("no-scroll");
+        }
+        window.scrollTo(0, 0);
+      }
+    </script>
   </body>
 </html>
