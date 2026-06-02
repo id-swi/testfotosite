@@ -20,7 +20,7 @@
       html,
       body {
         width: 100%;
-        height: 100%;
+        min-height: 100%;
         font-family:
           "Inter",
           -apple-system,
@@ -132,9 +132,7 @@
       /* ── Portfolio ── */
       .page-portfolio {
         padding: 0;
-        flex: 1;
-        display: flex !important;
-        flex-direction: column;
+        display: block !important;
       }
 
       .page-portfolio:not(.active) {
@@ -142,7 +140,6 @@
       }
 
       .iframe-wrapper {
-        flex: 1;
         display: flex;
         justify-content: center;
       }
@@ -150,10 +147,15 @@
       .iframe-wrapper iframe {
         width: 100%;
         max-width: 1200px;
-        height: 100%;
+        height: 5000px;
         border: none;
         display: block;
         background: #fff;
+        scrollbar-width: none;
+      }
+
+      .iframe-wrapper iframe::-webkit-scrollbar {
+        display: none;
       }
 
       /* ── Kontakt ── */
@@ -244,9 +246,43 @@
           .querySelector('nav a[data-page="' + name + '"]')
           .classList.add("active");
 
-        document.body.classList.add("no-scroll");
+        if (name === "portfolio") {
+          document.body.classList.remove("no-scroll");
+        } else {
+          document.body.classList.add("no-scroll");
+        }
         window.scrollTo(0, 0);
       }
+    </script>
+    <script>
+      // Gallery lightbox: lock parent scroll and send visible area to iframe
+      window.addEventListener("message", function (e) {
+        if (!e.data || e.data.type !== "galleryLightbox") return;
+        if (e.data.open) {
+          document.body.style.overflow = "hidden";
+          var iframes = document.querySelectorAll("iframe");
+          for (var i = 0; i < iframes.length; i++) {
+            if (iframes[i].contentWindow === e.source) {
+              var rect = iframes[i].getBoundingClientRect();
+              var top = Math.max(0, -rect.top);
+              var height =
+                Math.min(window.innerHeight, rect.bottom) -
+                Math.max(0, rect.top);
+              e.source.postMessage(
+                {
+                  type: "galleryViewport",
+                  top: Math.round(top),
+                  height: Math.round(Math.max(height, 300)),
+                },
+                "*",
+              );
+              break;
+            }
+          }
+        } else {
+          document.body.style.overflow = "";
+        }
+      });
     </script>
   </body>
 </html>
