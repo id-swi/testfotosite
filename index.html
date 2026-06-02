@@ -139,24 +139,16 @@
         display: none !important;
       }
 
-      .iframe-wrapper {
-        display: flex;
-        justify-content: center;
-      }
-
-      .iframe-wrapper iframe {
-        width: 100%;
-        max-width: 1200px;
-        height: 5000px;
-        border: none;
-        display: block;
-        background: #fff;
-        scrollbar-width: none;
-      }
-
       .iframe-wrapper iframe::-webkit-scrollbar {
         display: none;
       }
+
+      .gallery-loader { text-align: center; padding: 100px 24px; color: #5f6368; font-weight: 500; }
+      .auth-hint { display: none; text-align: center; padding: 60px 24px; border: 1px dashed #e0e0e0; border-radius: 12px; margin: 24px; max-width: 600px; align-self: center; font-family: 'Inter', sans-serif; }
+      .auth-btn { display: inline-block; padding: 12px 24px; background: #202124; color: #fff; text-decoration: none; border-radius: 24px; font-weight: 600; font-size: 0.875rem; }
+      .auth-return { display: none; margin-top: 16px; }
+      .iframe-wrapper { display: none; justify-content: center; }
+      .iframe-wrapper iframe { width: 100%; max-width: 1200px; height: 800px; border: none; transition: height 0.2s ease; }
 
       /* ── Kontakt ── */
       .page-kontakt {
@@ -215,13 +207,22 @@
       <h1>Herzlich Willkommen</h1>
     </section>
 
-    <section class="page page-portfolio" id="page-portfolio">
-      <div class="iframe-wrapper">
-        <iframe
-          src="https://script.google.com/macros/s/AKfycbwnqK4fqHVTz3YTpBvJdjGPxXaa_ILbYbJnN1wdOMYTrIJEnOf349vVo3JR1sQcqOU/exec"
-          allow="fullscreen"
-          loading="lazy"
-        ></iframe>
+    <section class="page page-portfolio" id="page-portfolio" style="display:flex; flex-direction:column;">
+      <div id="gallery-loader" class="gallery-loader">Loading Gallery...</div>
+
+      <div id="gallery-auth" class="auth-hint">
+        <p>Please sign in to your Google account to view this private gallery.</p>
+        <div id="auth-initial">
+          <a href="https://script.google.com/macros/s/AKfycbwnqK4fqHVTz3YTpBvJdjGPxXaa_ILbYbJnN1wdOMYTrIJEnOf349vVo3JR1sQcqOU/exec" onclick="document.getElementById('auth-initial').style.display='none';document.getElementById('auth-return').style.display='block';" target="_blank" class="auth-btn">Sign In / Authorize</a>
+        </div>
+        <div id="auth-return" class="auth-return">
+          <p style="color:#1a73e8; margin-bottom:8px;">Success? Return here to load.</p>
+          <button onclick="window.location.reload()" class="reload-btn" style="padding:8px 20px; border-radius:20px; cursor:pointer;">Reload Gallery</button>
+        </div>
+      </div>
+
+      <div id="iframe-wrap" class="iframe-wrapper">
+        <iframe id="gallery-iframe" src="https://script.google.com/macros/s/AKfycbwnqK4fqHVTz3YTpBvJdjGPxXaa_ILbYbJnN1wdOMYTrIJEnOf349vVo3JR1sQcqOU/exec" allow="fullscreen"></iframe>
       </div>
     </section>
 
@@ -255,34 +256,38 @@
       }
     </script>
     <script>
-      // Gallery lightbox: lock parent scroll and send visible area to iframe
-      window.addEventListener("message", function (e) {
-        if (!e.data || e.data.type !== "galleryLightbox") return;
-        if (e.data.open) {
-          document.body.style.overflow = "hidden";
-          var iframes = document.querySelectorAll("iframe");
-          for (var i = 0; i < iframes.length; i++) {
-            if (iframes[i].contentWindow === e.source) {
-              var rect = iframes[i].getBoundingClientRect();
-              var top = Math.max(0, -rect.top);
-              var height =
-                Math.min(window.innerHeight, rect.bottom) -
-                Math.max(0, rect.top);
-              e.source.postMessage(
-                {
-                  type: "galleryViewport",
-                  top: Math.round(top),
-                  height: Math.round(Math.max(height, 300)),
-                },
-                "*",
-              );
-              break;
+      (function() {
+        var iframe = document.getElementById('gallery-iframe');
+        var loader = document.getElementById('gallery-loader');
+        var auth = document.getElementById('gallery-auth');
+        var wrap = document.getElementById('iframe-wrap');
+        var hasLoaded = false;
+
+        window.addEventListener('message', function(e) {
+          if (!e.data) return;
+          
+          if (e.data.type === 'galleryLoaded') {
+            hasLoaded = true;
+            loader.style.display = 'none';
+            auth.style.display = 'none';
+            wrap.style.display = 'flex';
+          }
+          if (e.data.type === 'galleryHeight') {
+            iframe.style.height = e.data.height + 'px';
+          }
+          if (e.data.type === 'galleryLightbox') {
+            document.body.style.overflow = e.data.open ? 'hidden' : '';
+            if (e.data.open) {
+              var rect = iframe.getBoundingClientRect();
+              iframe.contentWindow.postMessage({
+                type: 'galleryViewport', top: Math.round(Math.max(0, -rect.top)), height: Math.round(window.innerHeight)
+              }, '*');
             }
           }
-        } else {
-          document.body.style.overflow = "";
-        }
-      });
+        });
+
+        setTimeout(function() { if (!hasLoaded) { loader.style.display = 'none'; auth.style.display = 'block'; } }, 3000);
+      })();
     </script>
   </body>
 </html>
