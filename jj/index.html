@@ -68,7 +68,8 @@
       .auth-hint { display: none; text-align: center; padding: 60px 24px; border: 1px dashed #e0e0e0; border-radius: 12px; margin: 24px; max-width: 600px; align-self: center; font-family: 'Inter', sans-serif; }
       .auth-btn { display: inline-block; padding: 12px 24px; background: #202124; color: #fff; text-decoration: none; border-radius: 24px; font-weight: 600; font-size: 0.875rem; }
       .auth-return { display: none; margin-top: 16px; }
-      .iframe-wrapper { display: none; justify-content: center; }
+      .is-hidden { display: none !important; }
+      .iframe-wrapper { display: flex; justify-content: center; }
       .iframe-wrapper iframe { width: 100%; max-width: 1200px; height: 800px; border: none; transition: height 0.2s ease; }
 
       @media (max-width: 600px) {
@@ -98,8 +99,8 @@
       </div>
     </div>
 
-    <div id="iframe-wrap" class="iframe-wrapper">
-      <iframe id="gallery-iframe" src="https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec" allow="fullscreen"></iframe>
+    <div id="iframe-wrap" class="iframe-wrapper is-hidden">
+      <iframe id="gallery-iframe" src="" allow="fullscreen"></iframe>
     </div>
     <script>
       (function() {
@@ -108,6 +109,7 @@
         var auth = document.getElementById('gallery-auth');
         var wrap = document.getElementById('iframe-wrap');
         var hasLoaded = false;
+        var scriptUrl = "https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec";
 
         window.addEventListener('message', function(e) {
           if (!e.data) return;
@@ -116,7 +118,7 @@
             hasLoaded = true;
             loader.style.display = 'none';
             auth.style.display = 'none';
-            wrap.style.display = 'flex';
+            wrap.classList.remove('is-hidden');
           }
           if (e.data.type === 'galleryHeight') {
             iframe.style.height = e.data.height + 'px';
@@ -132,7 +134,19 @@
           }
         });
 
-        setTimeout(function() { if (!hasLoaded) { loader.style.display = 'none'; auth.style.display = 'block'; } }, 3000);
+        // Set src after a tiny delay to ensure listeners are ready
+        setTimeout(function() {
+          iframe.src = scriptUrl;
+        }, 100);
+
+        setTimeout(function() { 
+          if (!hasLoaded) { 
+            loader.style.display = 'none'; 
+            auth.style.display = 'block'; 
+            // Keep iframe hidden if it hasn't signaled success
+            wrap.classList.add('is-hidden');
+          } 
+        }, 4000); // Slightly longer timeout
       })();
     </script>
   </body>
