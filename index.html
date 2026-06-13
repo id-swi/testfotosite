@@ -273,6 +273,9 @@
         window.addEventListener('message', function(e) {
           if (!e.data) return;
           
+          var iframe = document.getElementById('gallery-iframe');
+          
+          // 1. Handle Height & Loading
           if (e.data.type === 'galleryLoaded') {
             hasLoaded = true;
             loader.style.display = 'none';
@@ -282,13 +285,25 @@
           if (e.data.type === 'galleryHeight') {
             iframe.style.height = e.data.height + 'px';
           }
+
+          // 2. ULTIMATE Scroll Lock & Positioning
           if (e.data.type === 'galleryLightbox') {
-            document.body.style.overflow = e.data.open ? 'hidden' : '';
             if (e.data.open) {
+              // Lock scroll on ALL browsers
+              document.documentElement.style.overflow = 'hidden';
+              document.body.style.overflow = 'hidden';
+              
+              // Calculate precise position relative to where the user is looking
               var rect = iframe.getBoundingClientRect();
               iframe.contentWindow.postMessage({
-                type: 'galleryViewport', top: Math.round(Math.max(0, -rect.top)), height: Math.round(window.innerHeight)
+                type: 'galleryViewport', 
+                top: Math.round(Math.max(0, -rect.top)), 
+                height: Math.round(window.innerHeight)
               }, '*');
+            } else {
+              // Unlock scroll
+              document.documentElement.style.overflow = '';
+              document.body.style.overflow = '';
             }
           }
         });
