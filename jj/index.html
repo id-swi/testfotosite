@@ -6,207 +6,62 @@
     <title>JJ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet" />
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 100%; min-height: 100vh;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #fff; color: #202124; overflow-x: hidden;
       }
-
-      html,
-      body {
-        width: 100%;
-        min-height: 100vh;
-        font-family:
-          "Inter",
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          Roboto,
-          sans-serif;
-        background: #fff;
-        color: #202124;
-        overflow-x: hidden;
-      }
-
-      body {
-        display: flex;
-        flex-direction: column;
-      }
-
+      body { display: flex; flex-direction: column; }
       header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 24px;
-        height: 64px;
-        min-height: 64px;
-        border-bottom: 1px solid #e0e0e0;
-        background: #fff;
-        position: sticky;
-        top: 0;
-        z-index: 10;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 24px; height: 64px; border-bottom: 1px solid #e0e0e0;
+        background: #fff; position: sticky; top: 0; z-index: 10;
       }
-
-      .site-name {
-        font-weight: 800;
-        font-size: 1.25rem;
-        letter-spacing: -0.02em;
-        color: #202124;
-        text-decoration: none;
-      }
-
-      .iframe-wrapper iframe::-webkit-scrollbar {
-        display: none;
-      }
-
-      .gallery-loader {
-        text-align: center;
-        padding: 100px 24px;
-        color: #5f6368;
-        font-weight: 500;
-      }
-      .auth-hint {
-        display: none;
-        text-align: center;
-        padding: 60px 24px;
-        border: 1px dashed #e0e0e0;
-        border-radius: 12px;
-        margin: 24px;
-        max-width: 600px;
-        align-self: center;
-        font-family: "Inter", sans-serif;
-      }
-        display: inline-block;
-        padding: 12px 24px;
-        background: #202124;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 24px;
-        font-weight: 600;
-        font-size: 0.875rem;
-      }
-        display: none;
-        margin-top: 16px;
-      }
-      .is-hidden {
-        display: none !important;
-      }
-      .iframe-wrapper {
-        display: flex;
-        justify-content: center;
-      }
-      .iframe-wrapper iframe {
-        width: 100%;
-        max-width: 1200px;
-        height: 800px;
-        border: none;
-        transition: height 0.2s ease;
-      }
-
-      @media (max-width: 600px) {
-        header {
-          padding: 0 16px;
-          height: 56px;
-          min-height: 56px;
-        }
-      }
+      .site-name { font-weight: 800; font-size: 1.25rem; color: #202124; text-decoration: none; }
+      .gallery-loader { text-align: center; padding: 100px 24px; color: #5f6368; font-weight: 500; }
+      .iframe-wrapper { display: flex; justify-content: center; }
+      .iframe-wrapper iframe { width: 100%; max-width: 1200px; height: 800px; border: none; transition: height 0.2s ease; }
     </style>
   </head>
   <body>
-    <header>
-      <a class="site-name" href="/">JJ</a>
-    </header>
-
+    <header><a class="site-name" href="/">JJ</a></header>
     <div id="gallery-loader" class="gallery-loader">Loading Gallery...</div>
-
-        <a
-          href="https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec"
-          target="_blank"
-          >Sign In / Authorize</a
-        >
-      </div>
-        <p style="color: #1a73e8; margin-bottom: 8px">
-        </p>
-        <button
-          onclick="window.location.reload(true)"
-          style="padding: 8px 20px; border-radius: 20px; cursor: pointer"
-        >
-        </button>
-      </div>
-    </div>
-
     <div id="iframe-wrap" class="iframe-wrapper">
       <iframe id="gallery-iframe" src="" allow="fullscreen"></iframe>
     </div>
     <script>
-      }
-
       (function () {
         var iframe = document.getElementById("gallery-iframe");
         var loader = document.getElementById("gallery-loader");
-        var wrap = document.getElementById("iframe-wrap");
-        var hasLoaded = false;
-        var scriptUrl =
-          "https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec";
+        var scriptUrl = "https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec";
 
         window.addEventListener("message", function (e) {
           if (!e.data) return;
-
-          var iframe = document.getElementById("gallery-iframe");
-
-          // 1. Handle Height & Loading
           if (e.data.type === "galleryLoaded") {
-            hasLoaded = true;
             loader.style.display = "none";
-            
-            wrap.classList.remove("is-hidden");
           }
           if (e.data.type === "galleryHeight") {
             iframe.style.height = e.data.height + "px";
           }
-
-          // 2. ULTIMATE Scroll Lock & Positioning
           if (e.data.type === "galleryLightbox") {
+            document.documentElement.style.overflow = e.data.open ? "hidden" : "";
+            document.body.style.overflow = e.data.open ? "hidden" : "";
             if (e.data.open) {
-              // Lock scroll on ALL browsers
-              document.documentElement.style.overflow = "hidden";
-              document.body.style.overflow = "hidden";
-
-              // Calculate precise position relative to where the user is looking
               var rect = iframe.getBoundingClientRect();
-              iframe.contentWindow.postMessage(
-                {
-                  type: "galleryViewport",
-                  top: Math.round(Math.max(0, -rect.top)),
-                  height: Math.round(window.innerHeight),
-                },
-                "*",
-              );
-            } else {
-              // Unlock scroll
-              document.documentElement.style.overflow = "";
-              document.body.style.overflow = "";
+              iframe.contentWindow.postMessage({
+                type: "galleryViewport",
+                top: Math.round(Math.max(0, -rect.top)),
+                height: Math.round(window.innerHeight),
+              }, "*");
             }
           }
         });
 
-        // Set src after a tiny delay to ensure listeners are ready
-        setTimeout(function () {
-          iframe.src = scriptUrl;
-        }, 100);
-
-        setTimeout(function () {
-          if (!hasLoaded) {
-            loader.style.display = "none";
-            
-            
-          }
-        }, 15000); // 15s for slower connections/auth checks
+        setTimeout(function () { iframe.src = scriptUrl; }, 100);
+        setTimeout(function () { loader.style.display = "none"; }, 15000);
       })();
     </script>
   </body>
