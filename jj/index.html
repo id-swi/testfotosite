@@ -37,29 +37,40 @@
                 var scriptUrl = "https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec";
 
         window.addEventListener("message", function (e) {
-          if (!e.data) return;
-          var type = e.data.type || "";
-          if (type === "galleryLoaded" || type === "galleryHeight" || type === "galleryViewport") {
+          if (!e || !e.data) return;
+          var data = e.data;
+          if (typeof data === "string") { try { data = JSON.parse(data); } catch(err) {} }
+          if (typeof data !== "object") return;
+
+          var type = data.type;
+          if (!type) return;
+
+          if (type === "galleryLoaded" || type === "galleryHeight" || type === "galleryViewport" || type === "galleryLightbox") {
               var loader = document.getElementById("gallery-loader");
               if (loader) loader.style.display = "none";
           }
-          if (e.data.type === "galleryHeight") {
-            iframe.style.height = e.data.height + "px";
+
+          var iframe = document.getElementById("gallery-iframe");
+
+          if (type === "galleryHeight" && iframe) {
+            iframe.style.height = data.height + "px";
           }
-          if (e.data.type === "galleryLightbox") {
-            if (e.data.open) {
+
+          if (type === "galleryLightbox" && iframe) {
+            if (data.open) {
               var scrollY = window.scrollY;
               document.body.style.position = "fixed";
               document.body.style.top = "-" + scrollY + "px";
               document.body.style.width = "100%";
               document.body.style.overflow = "hidden";
-              
+
               var rect = iframe.getBoundingClientRect();
-              iframe.contentWindow.postMessage({
+              var msg = {
                 type: "galleryViewport",
                 top: Math.round(Math.max(0, -rect.top)),
-                height: Math.round(window.innerHeight),
-              }, "*");
+                height: Math.round(window.innerHeight)
+              };
+              if (e.source) { e.source.postMessage(msg, "*"); } else { iframe.contentWindow.postMessage(msg, "*"); }
             } else {
               var scrollY = document.body.style.top;
               document.body.style.position = "";
@@ -77,6 +88,7 @@
     </script>
   </body>
 </html>
+
 
 
 
