@@ -143,13 +143,7 @@
         display: none;
       }
 
-      .gallery-loader {
-        text-align: center;
-        padding: 100px 24px;
-        color: #5f6368;
-        font-weight: 500;
-      }
-      .auth-hint {
+            .auth-hint {
         display: none;
         text-align: center;
         padding: 60px 24px;
@@ -249,8 +243,7 @@
       id="page-portfolio"
       style="display: flex; flex-direction: column"
     >
-      <div id="gallery-loader" class="gallery-loader">Loading Gallery...</div>
-
+      
         <p>
         </p>
           <a
@@ -308,8 +301,7 @@
     <script>
       (function () {
         var iframe = document.getElementById("gallery-iframe");
-        var loader = document.getElementById("gallery-loader");
-        var wrap = document.getElementById("iframe-wrap");
+                var wrap = document.getElementById("iframe-wrap");
         var hasLoaded = false;
         var scriptUrl =
           "https://script.google.com/macros/s/AKfycbwnqK4fqHVTz3YTpBvJdjGPxXaa_ILbYbJnN1wdOMYTrIJEnOf349vVo3JR1sQcqOU/exec";
@@ -322,8 +314,7 @@
           // 1. Handle Height & Loading
           if (e.data.type === "galleryLoaded") {
             hasLoaded = true;
-            loader.style.display = "none";
-            wrap.classList.remove("is-hidden");
+                        wrap.classList.remove("is-hidden");
           }
           if (e.data.type === "galleryHeight") {
             iframe.style.height = e.data.height + "px";
@@ -361,11 +352,12 @@
 
         setTimeout(function () {
           if (!hasLoaded) {
-            loader.style.display = "none";
-            
+                        
           }
         }, 15000);
       })();
     </script>
   </body>
 </html>
+
+

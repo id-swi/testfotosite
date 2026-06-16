@@ -21,34 +21,37 @@
         background: #fff; position: sticky; top: 0; z-index: 10;
       }
       .site-name { font-weight: 800; font-size: 1.25rem; color: #202124; text-decoration: none; }
-      .gallery-loader { text-align: center; padding: 100px 24px; color: #5f6368; font-weight: 500; }
-      .iframe-wrapper { display: flex; justify-content: center; }
+            .iframe-wrapper { display: flex; justify-content: center; }
       .iframe-wrapper iframe { width: 100%; max-width: 1200px; height: 800px; border: none; transition: height 0.2s ease; }
     </style>
   </head>
   <body>
     <header><a class="site-name" href="/">JJ</a></header>
-    <div id="gallery-loader" class="gallery-loader">Loading Gallery...</div>
-    <div id="iframe-wrap" class="iframe-wrapper">
+        <div id="iframe-wrap" class="iframe-wrapper">
       <iframe id="gallery-iframe" src="" allow="fullscreen"></iframe>
     </div>
     <script>
       (function () {
         var iframe = document.getElementById("gallery-iframe");
-        var loader = document.getElementById("gallery-loader");
-        var scriptUrl = "https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec";
+                var scriptUrl = "https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec";
 
         window.addEventListener("message", function (e) {
           if (!e.data) return;
           if (e.data.type === "galleryLoaded") {
-            loader.style.display = "none";
-          }
+                      }
           if (e.data.type === "galleryHeight") {
             iframe.style.height = e.data.height + "px";
           }
           if (e.data.type === "galleryLightbox") {
-            document.documentElement.style.overflow = e.data.open ? "hidden" : "";
-            document.body.style.overflow = e.data.open ? "hidden" : "";
+            if (e.data.open) {
+              document.documentElement.style.setProperty("overflow", "hidden", "important");
+              document.body.style.setProperty("overflow", "hidden", "important");
+              document.body.style.setProperty("touch-action", "none", "important");
+            } else {
+              document.documentElement.style.overflow = "";
+              document.body.style.overflow = "";
+              document.body.style.touchAction = "";
+            }
             if (e.data.open) {
               var rect = iframe.getBoundingClientRect();
               iframe.contentWindow.postMessage({
@@ -61,8 +64,10 @@
         });
 
         setTimeout(function () { iframe.src = scriptUrl; }, 100);
-        setTimeout(function () { loader.style.display = "none"; }, 15000);
+        setTimeout(function () {  }, 15000);
       })();
     </script>
   </body>
 </html>
+
+

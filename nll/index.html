@@ -64,13 +64,7 @@
         display: none;
       }
 
-      .gallery-loader {
-        text-align: center;
-        padding: 100px 24px;
-        color: #5f6368;
-        font-weight: 500;
-      }
-      .auth-hint {
+            .auth-hint {
         display: none;
         text-align: center;
         padding: 60px 24px;
@@ -122,8 +116,7 @@
       <a class="site-name" href="/">Isaiah Dias</a>
     </header>
 
-    <div id="gallery-loader" class="gallery-loader">Loading Gallery...</div>
-
+    
         <a
           href="https://script.google.com/macros/s/AKfycbzmGqRow3mdLzGc-K36jNJNqhyA5nA4DmF7ARcaWJmYVKpKAgNInQ0CZTvL4pHKTwsj/exec"
           target="_blank"
@@ -148,8 +141,7 @@
 
       (function () {
         var iframe = document.getElementById("gallery-iframe");
-        var loader = document.getElementById("gallery-loader");
-        var wrap = document.getElementById("iframe-wrap");
+                var wrap = document.getElementById("iframe-wrap");
         var hasLoaded = false;
         var scriptUrl =
           "https://script.google.com/macros/s/AKfycbzmGqRow3mdLzGc-K36jNJNqhyA5nA4DmF7ARcaWJmYVKpKAgNInQ0CZTvL4pHKTwsj/exec";
@@ -162,8 +154,7 @@
           // 1. Handle Height & Loading
           if (e.data.type === "galleryLoaded") {
             hasLoaded = true;
-            loader.style.display = "none";
-            wrap.classList.remove("is-hidden");
+                        wrap.classList.remove("is-hidden");
           }
           if (e.data.type === "galleryHeight") {
             iframe.style.height = e.data.height + "px";
@@ -201,11 +192,12 @@
 
         setTimeout(function () {
           if (!hasLoaded) {
-            loader.style.display = "none";
-            
+                        
           }
         }, 5000);
       })();
     </script>
   </body>
 </html>
+
+
