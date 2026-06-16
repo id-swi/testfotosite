@@ -160,7 +160,6 @@
         align-self: center;
         font-family: "Inter", sans-serif;
       }
-      .auth-btn {
         display: inline-block;
         padding: 12px 24px;
         background: #202124;
@@ -170,7 +169,6 @@
         font-weight: 600;
         font-size: 0.875rem;
       }
-      .auth-return {
         display: none;
         margin-top: 16px;
       }
@@ -253,29 +251,20 @@
     >
       <div id="gallery-loader" class="gallery-loader">Loading Gallery...</div>
 
-      <div id="gallery-auth" class="auth-hint">
         <p>
-          Please sign in to your Google account to view this private gallery.
         </p>
-        <div id="auth-initial">
           <a
             href="https://script.google.com/macros/s/AKfycbwnqK4fqHVTz3YTpBvJdjGPxXaa_ILbYbJnN1wdOMYTrIJEnOf349vVo3JR1sQcqOU/exec"
-            onclick="onAuthorizeClick()"
             target="_blank"
-            class="auth-btn"
             >Sign In / Authorize</a
           >
         </div>
-        <div id="auth-return" class="auth-return">
           <p style="color: #1a73e8; margin-bottom: 8px">
-            Success? Return here to load.
           </p>
           <button
             onclick="window.location.reload(true)"
-            class="reload-btn"
             style="padding: 8px 20px; border-radius: 20px; cursor: pointer"
           >
-            Reload Gallery
           </button>
         </div>
       </div>
@@ -294,9 +283,6 @@
     </section>
 
     <script>
-      function onAuthorizeClick() {
-        document.getElementById("auth-initial").style.display = "none";
-        document.getElementById("auth-return").style.display = "block";
       }
 
       function showPage(name) {
@@ -323,7 +309,6 @@
       (function () {
         var iframe = document.getElementById("gallery-iframe");
         var loader = document.getElementById("gallery-loader");
-        var auth = document.getElementById("gallery-auth");
         var wrap = document.getElementById("iframe-wrap");
         var hasLoaded = false;
         var scriptUrl =
@@ -338,7 +323,6 @@
           if (e.data.type === "galleryLoaded") {
             hasLoaded = true;
             loader.style.display = "none";
-            auth.style.display = "none";
             wrap.classList.remove("is-hidden");
           }
           if (e.data.type === "galleryHeight") {
@@ -378,8 +362,7 @@
         setTimeout(function () {
           if (!hasLoaded) {
             loader.style.display = "none";
-            auth.style.display = "block";
-            wrap.classList.add("is-hidden");
+            
           }
         }, 15000);
       })();
