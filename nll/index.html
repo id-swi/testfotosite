@@ -163,24 +163,25 @@
           // 2. ULTIMATE Scroll Lock & Positioning
           if (e.data.type === "galleryLightbox") {
             if (e.data.open) {
-              // Lock scroll on ALL browsers
-              document.documentElement.style.overflow = "hidden";
+              var scrollY = window.scrollY;
+              document.body.style.position = "fixed";
+              document.body.style.top = "-" + scrollY + "px";
+              document.body.style.width = "100%";
               document.body.style.overflow = "hidden";
-
-              // Calculate precise position relative to where the user is looking
+              
               var rect = iframe.getBoundingClientRect();
-              iframe.contentWindow.postMessage(
-                {
-                  type: "galleryViewport",
-                  top: Math.round(Math.max(0, -rect.top)),
-                  height: Math.round(window.innerHeight),
-                },
-                "*",
-              );
+              iframe.contentWindow.postMessage({
+                type: "galleryViewport",
+                top: Math.round(Math.max(0, -rect.top)),
+                height: Math.round(window.innerHeight),
+              }, "*");
             } else {
-              // Unlock scroll
-              document.documentElement.style.overflow = "";
+              var scrollY = document.body.style.top;
+              document.body.style.position = "";
+              document.body.style.top = "";
+              document.body.style.width = "";
               document.body.style.overflow = "";
+              window.scrollTo(0, parseInt(scrollY || "0") * -1);
             }
           }
         });
@@ -199,5 +200,6 @@
     </script>
   </body>
 </html>
+
 
 

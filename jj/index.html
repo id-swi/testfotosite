@@ -44,21 +44,25 @@
           }
           if (e.data.type === "galleryLightbox") {
             if (e.data.open) {
-              document.documentElement.style.setProperty("overflow", "hidden", "important");
-              document.body.style.setProperty("overflow", "hidden", "important");
-              document.body.style.setProperty("touch-action", "none", "important");
-            } else {
-              document.documentElement.style.overflow = "";
-              document.body.style.overflow = "";
-              document.body.style.touchAction = "";
-            }
-            if (e.data.open) {
+              var scrollY = window.scrollY;
+              document.body.style.position = "fixed";
+              document.body.style.top = "-" + scrollY + "px";
+              document.body.style.width = "100%";
+              document.body.style.overflow = "hidden";
+              
               var rect = iframe.getBoundingClientRect();
               iframe.contentWindow.postMessage({
                 type: "galleryViewport",
                 top: Math.round(Math.max(0, -rect.top)),
                 height: Math.round(window.innerHeight),
               }, "*");
+            } else {
+              var scrollY = document.body.style.top;
+              document.body.style.position = "";
+              document.body.style.top = "";
+              document.body.style.width = "";
+              document.body.style.overflow = "";
+              window.scrollTo(0, parseInt(scrollY || "0") * -1);
             }
           }
         });
@@ -69,5 +73,6 @@
     </script>
   </body>
 </html>
+
 
 
