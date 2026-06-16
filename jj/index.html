@@ -22,12 +22,13 @@
       }
       .site-name { font-weight: 800; font-size: 1.25rem; color: #202124; text-decoration: none; }
             .iframe-wrapper { display: flex; justify-content: center; }
-      .iframe-wrapper iframe { width: 100%; max-width: 1200px; height: 800px; border: none; transition: height 0.2s ease; }
+      .iframe-wrapper iframe { width: 100%; height: 800px; border: none; transition: height 0.2s ease; }
     </style>
   </head>
   <body>
     <header><a class="site-name" href="/">JJ</a></header>
-        <div id="iframe-wrap" class="iframe-wrapper">
+        <div id="gallery-loader" style="text-align: center; padding: 100px 24px; color: #5f6368; font-family: sans-serif;">Loading...</div>
+    <div id="iframe-wrap" class="iframe-wrapper">
       <iframe id="gallery-iframe" src="" allow="fullscreen"></iframe>
     </div>
     <script>
@@ -38,6 +39,8 @@
         window.addEventListener("message", function (e) {
           if (!e.data) return;
           if (e.data.type === "galleryLoaded") {
+              var loader = document.getElementById("gallery-loader");
+              if (loader) loader.style.display = "none";
                       }
           if (e.data.type === "galleryHeight") {
             iframe.style.height = e.data.height + "px";
@@ -73,6 +76,7 @@
     </script>
   </body>
 </html>
+
 
 
 

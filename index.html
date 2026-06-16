@@ -175,7 +175,6 @@
       }
       .iframe-wrapper iframe {
         width: 100%;
-        max-width: 1200px;
         height: 800px;
         border: none;
         transition: height 0.2s ease;
@@ -262,7 +261,8 @@
         </div>
       </div>
 
-      <div id="iframe-wrap" class="iframe-wrapper">
+      <div id="gallery-loader" style="text-align: center; padding: 100px 24px; color: #5f6368; font-family: sans-serif;">Loading...</div>
+    <div id="iframe-wrap" class="iframe-wrapper">
         <iframe id="gallery-iframe" src="" allow="fullscreen"></iframe>
       </div>
     </section>
@@ -313,6 +313,8 @@
 
           // 1. Handle Height & Loading
           if (e.data.type === "galleryLoaded") {
+              var loader = document.getElementById("gallery-loader");
+              if (loader) loader.style.display = "none";
             hasLoaded = true;
                         wrap.classList.remove("is-hidden");
           }
@@ -360,6 +362,7 @@
     </script>
   </body>
 </html>
+
 
 
 
