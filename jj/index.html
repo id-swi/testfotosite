@@ -38,10 +38,11 @@
 
         window.addEventListener("message", function (e) {
           if (!e.data) return;
-          if (e.data.type === "galleryLoaded") {
+          var type = e.data.type || "";
+          if (type === "galleryLoaded" || type === "galleryHeight" || type === "galleryViewport") {
               var loader = document.getElementById("gallery-loader");
               if (loader) loader.style.display = "none";
-                      }
+          }
           if (e.data.type === "galleryHeight") {
             iframe.style.height = e.data.height + "px";
           }
@@ -76,6 +77,7 @@
     </script>
   </body>
 </html>
+
 
 
 
