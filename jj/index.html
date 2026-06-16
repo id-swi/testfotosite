@@ -64,13 +64,51 @@
         display: none;
       }
 
-      .gallery-loader { text-align: center; padding: 100px 24px; color: #5f6368; font-weight: 500; }
-      .auth-hint { display: none; text-align: center; padding: 60px 24px; border: 1px dashed #e0e0e0; border-radius: 12px; margin: 24px; max-width: 600px; align-self: center; font-family: 'Inter', sans-serif; }
-      .auth-btn { display: inline-block; padding: 12px 24px; background: #202124; color: #fff; text-decoration: none; border-radius: 24px; font-weight: 600; font-size: 0.875rem; }
-      .auth-return { display: none; margin-top: 16px; }
-      .is-hidden { display: none !important; }
-      .iframe-wrapper { display: flex; justify-content: center; }
-      .iframe-wrapper iframe { width: 100%; max-width: 1200px; height: 800px; border: none; transition: height 0.2s ease; }
+      .gallery-loader {
+        text-align: center;
+        padding: 100px 24px;
+        color: #5f6368;
+        font-weight: 500;
+      }
+      .auth-hint {
+        display: none;
+        text-align: center;
+        padding: 60px 24px;
+        border: 1px dashed #e0e0e0;
+        border-radius: 12px;
+        margin: 24px;
+        max-width: 600px;
+        align-self: center;
+        font-family: "Inter", sans-serif;
+      }
+      .auth-btn {
+        display: inline-block;
+        padding: 12px 24px;
+        background: #202124;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 24px;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+      .auth-return {
+        display: none;
+        margin-top: 16px;
+      }
+      .is-hidden {
+        display: none !important;
+      }
+      .iframe-wrapper {
+        display: flex;
+        justify-content: center;
+      }
+      .iframe-wrapper iframe {
+        width: 100%;
+        max-width: 1200px;
+        height: 800px;
+        border: none;
+        transition: height 0.2s ease;
+      }
 
       @media (max-width: 600px) {
         header {
@@ -91,11 +129,25 @@
     <div id="gallery-auth" class="auth-hint">
       <p>Please sign in to your Google account to view this private gallery.</p>
       <div id="auth-initial">
-        <a href="https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec" onclick="onAuthorizeClick()" target="_blank" class="auth-btn">Sign In / Authorize</a>
+        <a
+          href="https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec"
+          onclick="onAuthorizeClick()"
+          target="_blank"
+          class="auth-btn"
+          >Sign In / Authorize</a
+        >
       </div>
       <div id="auth-return" class="auth-return">
-        <p style="color:#1a73e8; margin-bottom:8px;">Success? Return here to load.</p>
-        <button onclick="window.location.reload(true)" class="reload-btn" style="padding:8px 20px; border-radius:20px; cursor:pointer;">Reload Gallery</button>
+        <p style="color: #1a73e8; margin-bottom: 8px">
+          Success? Return here to load.
+        </p>
+        <button
+          onclick="window.location.reload(true)"
+          class="reload-btn"
+          style="padding: 8px 20px; border-radius: 20px; cursor: pointer"
+        >
+          Reload Gallery
+        </button>
       </div>
     </div>
 
@@ -104,67 +156,71 @@
     </div>
     <script>
       function onAuthorizeClick() {
-        document.getElementById('auth-initial').style.display = 'none';
-        document.getElementById('auth-return').style.display = 'block';
+        document.getElementById("auth-initial").style.display = "none";
+        document.getElementById("auth-return").style.display = "block";
       }
 
-      (function() {
-        var iframe = document.getElementById('gallery-iframe');
-        var loader = document.getElementById('gallery-loader');
-        var auth = document.getElementById('gallery-auth');
-        var wrap = document.getElementById('iframe-wrap');
+      (function () {
+        var iframe = document.getElementById("gallery-iframe");
+        var loader = document.getElementById("gallery-loader");
+        var auth = document.getElementById("gallery-auth");
+        var wrap = document.getElementById("iframe-wrap");
         var hasLoaded = false;
-        var scriptUrl = "https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec";
+        var scriptUrl =
+          "https://script.google.com/macros/s/AKfycbztxG8MZwOafY-I9uXrmN5TpwapuBIbgviodmCUtK6s6Ae9yK8bzAf23UNFoK0KktSN/exec";
 
-        window.addEventListener('message', function(e) {
+        window.addEventListener("message", function (e) {
           if (!e.data) return;
-          
-          var iframe = document.getElementById('gallery-iframe');
-          
+
+          var iframe = document.getElementById("gallery-iframe");
+
           // 1. Handle Height & Loading
-          if (e.data.type === 'galleryLoaded') {
+          if (e.data.type === "galleryLoaded") {
             hasLoaded = true;
-            loader.style.display = 'none';
-            auth.style.display = 'none';
-            wrap.classList.remove('is-hidden');
+            loader.style.display = "none";
+            auth.style.display = "none";
+            wrap.classList.remove("is-hidden");
           }
-          if (e.data.type === 'galleryHeight') {
-            iframe.style.height = e.data.height + 'px';
+          if (e.data.type === "galleryHeight") {
+            iframe.style.height = e.data.height + "px";
           }
 
           // 2. ULTIMATE Scroll Lock & Positioning
-          if (e.data.type === 'galleryLightbox') {
+          if (e.data.type === "galleryLightbox") {
             if (e.data.open) {
               // Lock scroll on ALL browsers
-              document.documentElement.style.overflow = 'hidden';
-              document.body.style.overflow = 'hidden';
-              
+              document.documentElement.style.overflow = "hidden";
+              document.body.style.overflow = "hidden";
+
               // Calculate precise position relative to where the user is looking
               var rect = iframe.getBoundingClientRect();
-              iframe.contentWindow.postMessage({
-                type: 'galleryViewport', 
-                top: Math.round(Math.max(0, -rect.top)), 
-                height: Math.round(window.innerHeight)
-              }, '*');
+              iframe.contentWindow.postMessage(
+                {
+                  type: "galleryViewport",
+                  top: Math.round(Math.max(0, -rect.top)),
+                  height: Math.round(window.innerHeight),
+                },
+                "*",
+              );
             } else {
               // Unlock scroll
-              document.documentElement.style.overflow = '';
-              document.body.style.overflow = '';
+              document.documentElement.style.overflow = "";
+              document.body.style.overflow = "";
             }
           }
         });
 
         // Set src after a tiny delay to ensure listeners are ready
-        setTimeout(function() {
+        setTimeout(function () {
           iframe.src = scriptUrl;
         }, 100);
 
-        setTimeout(function() { 
-          if (!hasLoaded) { 
-            loader.style.display = 'none'; 
-            auth.style.display = 'block'; 
-            wrap.classList.add('is-hidden');
-          } 
+        setTimeout(function () {
+          if (!hasLoaded) {
+            loader.style.display = "none";
+            auth.style.display = "block";
+            wrap.classList.add("is-hidden");
+          }
         }, 5000); // 5s for slower connections/auth checks
       })();
     </script>
